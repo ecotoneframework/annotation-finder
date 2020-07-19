@@ -8,6 +8,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Ecotone\AnnotationFinder\AnnotationResolver\AttributeResolver;
 use Ecotone\AnnotationFinder\AnnotationResolver\CombinedResolver;
 use Ecotone\AnnotationFinder\AnnotationResolver\DoctrineAnnotationResolver;
+use Ecotone\AnnotationFinder\AnnotationResolver\OnlyAvailableResolver;
 use Ecotone\AnnotationFinder\FileSystem\AutoloadFileNamespaceParser;
 use Ecotone\AnnotationFinder\FileSystem\FileSystemAnnotationFinder;
 
@@ -51,18 +52,8 @@ class AnnotationFinderFactory
 
     public static function createFromWhatIsAvailable(string $rootProjectPath, array $namespaces, string $environmentName = "prod", string $directoryToDiscoverNamespaces = "") : AnnotationFinder
     {
-        if (PHP_MAJOR_VERSION < 8) {
-            $resolver =  new DoctrineAnnotationResolver();
-        }else {
-            if (!class_exists(AnnotationReader::class)) {
-                $resolver = new AttributeResolver();
-            }else {
-                $resolver = new CombinedResolver(new AttributeResolver(), new DoctrineAnnotationResolver());
-            }
-        }
-
         return new FileSystemAnnotationFinder(
-            $resolver,
+            new OnlyAvailableResolver(),
             new AutoloadFileNamespaceParser(),
             $rootProjectPath,
             $namespaces,
