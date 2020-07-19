@@ -9,7 +9,7 @@
         }
     ],
     "keywords": ["ecotone", "attribute", "annotation", "finder", "lookup"],
-    "description": "Ecotone Annotation Finder provides support for looking up class and methods annotated with specific Doctrine Annotations or PHP Native Attributes",
+    "description": "Provides support for looking up class and methods annotated with specific Doctrine Annotations or PHP Native Attributes",
     "autoload": {
         "psr-4": {
             "Ecotone\\": "src",
