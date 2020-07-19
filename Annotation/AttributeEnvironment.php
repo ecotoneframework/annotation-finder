@@ -13,7 +13,7 @@ class AttributeEnvironment
     /**
      * @var string[]
      */
-    public $names;
+    public array $names = [];
 
     public function __construct(array $environments = [])
     {

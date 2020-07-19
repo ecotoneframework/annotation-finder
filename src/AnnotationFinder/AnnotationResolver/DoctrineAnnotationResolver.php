@@ -44,7 +44,7 @@ class DoctrineAnnotationResolver implements AnnotationResolver
     public function getAnnotationsForClass(string $className): array
     {
         $reflectionClass  = new \ReflectionClass($className);
-
+        
         return $this->annotationReader->getClassAnnotations($reflectionClass);
     }
 

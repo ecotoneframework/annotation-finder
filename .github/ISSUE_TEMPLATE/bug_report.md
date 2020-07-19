@@ -14,7 +14,7 @@ assignees: ''
 
 **How to reproduce**  
 <!-- Code and/or config needed to reproduce the problem. 
-If it's a complex bug, create example as https://github.com/ecotoneFramework/examples -->
+If it's a complex bug, create Example as https://github.com/ecotoneFramework/examples -->
 
 **Possible Solution**  
 <!--- Optional: only if you have suggestions on a fix/reason for the bug -->

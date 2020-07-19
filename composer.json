@@ -20,7 +20,8 @@
         "psr-4": {
             "Test\\Ecotone\\": "tests",
             "IncorrectDoctrine\\": ["tests\\AnnotationFinder\\Fixture\\Usage\\Doctrine\\TestingNamespace\\IncorrectDoctrine\\TestingNamespace"],
-            "IncorrectAttribute\\": ["tests\\AnnotationFinder\\Fixture\\Usage\\Attribute\\TestingNamespace\\IncorrectAttribute\\TestingNamespace"]
+            "IncorrectAttribute\\": ["tests\\AnnotationFinder\\Fixture\\Usage\\Attribute\\TestingNamespace\\IncorrectAttribute\\TestingNamespace"],
+            "Example\\": "Example"
         },
         "psr-0": {
             "FixtureAutoloadTest\\": "tests\\Messaging",

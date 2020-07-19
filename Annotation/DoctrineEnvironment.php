@@ -14,5 +14,5 @@ class DoctrineEnvironment
     /**
      * @var string[]
      */
-    public $names;
+    public array $names = [];
 }

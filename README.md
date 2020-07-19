@@ -1,3 +1,7 @@
+<p align="left"><a href="https://ecotone.tech" target="_blank">
+    <img src="https://github.com/ecotoneframework/ecotone/blob/master/ecotone_small.png?raw=true">
+</a></p>
+
 [![Build Status](https://travis-ci.org/ecotoneframework/annotation-finder.svg?branch=master)](https://travis-ci.org/ecotoneframework/annotation-finder)
 [![License](https://poser.pugx.org/ecotone/annotation-finder/license)](https://packagist.org/packages/ecotone/annotation-finder)
 [![Latest Stable Version](https://poser.pugx.org/ecotone/annotation-finder/v/stable)](https://packagist.org/packages/ecotone/annotation-finder)

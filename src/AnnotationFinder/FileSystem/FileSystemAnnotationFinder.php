@@ -53,7 +53,7 @@ class FileSystemAnnotationFinder implements AnnotationFinder
 
             if (!in_array($environmentName, $environment->names)) {
                 $key = array_search($classNameWithEnvironment, $this->registeredClasses);
-                if ($key) {
+                if ($key !== false) {
                     unset($this->registeredClasses[$key]);
                     $this->registeredClasses = array_values($this->registeredClasses);
                 }
@@ -195,7 +195,7 @@ class FileSystemAnnotationFinder implements AnnotationFinder
         $annotationsForClass = $this->getAnnotationsForClass($className);
         $resolvedAnnotations = [];
         foreach ($annotationsForClass as $annotationForClass) {
-            if (get_class($annotationForClass) == $annotationClassNameToFind) {
+            if (is_a($annotationForClass, $annotationClassNameToFind)) {
                 $resolvedAnnotations[] = $annotationForClass;
             }
         }
@@ -210,7 +210,7 @@ class FileSystemAnnotationFinder implements AnnotationFinder
     private function init(string $rootProjectDir, array $namespacesToUse, string $catalogToLoad, AutoloadNamespaceParser $autoloadNamespaceParser)
     {
         $classes      = [];
-        $composerPath = $rootProjectDir . "/composer.json";
+        $composerPath = rtrim(realpath($rootProjectDir), "/") . "/composer.json";
         if ($catalogToLoad && !file_exists($composerPath)) {
             throw new InvalidArgumentException("Can't load src, composer.json not found in {$composerPath}");
         }
