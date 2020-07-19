@@ -7,6 +7,12 @@
 
 ## Annotation Resolver
 
+Provides support for finding classes and methods annotated using Doctrine Annotations, PHP8 Attributes or both.
+
+## Examples
+
+- [Doctrine Annotations](Example/DoctrineAnnotation)
+- [PHP8 Attributes](Example/Attribute) 
 
 ## Feature requests and issue reporting
 
