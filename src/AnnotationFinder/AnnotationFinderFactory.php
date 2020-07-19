@@ -25,7 +25,7 @@ class AnnotationFinderFactory
         );
     }
 
-    public function createForAttributes(string $rootProjectPath, array $namespaces, string $environmentName = "prod", string $directoryToDiscoverNamespaces = "") : AnnotationFinder
+    public static function createForAttributes(string $rootProjectPath, array $namespaces, string $environmentName = "prod", string $directoryToDiscoverNamespaces = "") : AnnotationFinder
     {
         return new FileSystemAnnotationFinder(
             new AttributeResolver(),
@@ -37,7 +37,7 @@ class AnnotationFinderFactory
         );
     }
 
-    public function createCombinedDoctrineAndAttributes(string $rootProjectPath, array $namespaces, string $environmentName = "prod", string $directoryToDiscoverNamespaces = "") : AnnotationFinder
+    public static function createCombinedDoctrineAndAttributes(string $rootProjectPath, array $namespaces, string $environmentName = "prod", string $directoryToDiscoverNamespaces = "") : AnnotationFinder
     {
         return new FileSystemAnnotationFinder(
             new CombinedResolver(new AttributeResolver(), new DoctrineAnnotationResolver()),
@@ -49,7 +49,7 @@ class AnnotationFinderFactory
         );
     }
 
-    public function createFromWhatIsAvailable(string $rootProjectPath, array $namespaces, string $environmentName = "prod", string $directoryToDiscoverNamespaces = "") : AnnotationFinder
+    public static function createFromWhatIsAvailable(string $rootProjectPath, array $namespaces, string $environmentName = "prod", string $directoryToDiscoverNamespaces = "") : AnnotationFinder
     {
         if (PHP_MAJOR_VERSION < 8) {
             $resolver =  new DoctrineAnnotationResolver();
