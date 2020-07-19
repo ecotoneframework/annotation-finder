@@ -1,0 +1,37 @@
+{
+    "name": "ecotone/annotation-finder",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Dariusz Gafka",
+            "email": "dgafka.mail@gmail.com"
+        }
+    ],
+    "keywords": ["ecotone", "attribute", "annotation", "finder", "lookup"],
+    "description": "Ecotone Annotation Finder provides support for looking up class and methods annotated with specific Doctrine Annotations or PHP Native Attributes",
+    "autoload": {
+        "psr-4": {
+            "Ecotone\\": "src",
+            "Annotation\\": "Annotation"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\Ecotone\\": "tests",
+            "IncorrectDoctrine\\": ["tests\\AnnotationFinder\\Fixture\\Usage\\Doctrine\\TestingNamespace\\IncorrectDoctrine\\TestingNamespace"],
+            "IncorrectAttribute\\": ["tests\\AnnotationFinder\\Fixture\\Usage\\Attribute\\TestingNamespace\\IncorrectAttribute\\TestingNamespace"]
+        },
+        "psr-0": {
+            "FixtureAutoloadTest\\": "tests\\Messaging",
+            "TestingNamespace\\": "tests\\Messaging"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.2",
+        "doctrine/annotations": "^1.10"
+    }
+}
