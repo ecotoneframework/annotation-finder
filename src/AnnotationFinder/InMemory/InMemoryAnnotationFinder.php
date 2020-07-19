@@ -6,6 +6,9 @@ namespace Ecotone\AnnotationFinder\InMemory;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ecotone\AnnotationFinder\AnnotatedDefinition;
 use Ecotone\AnnotationFinder\AnnotationFinder;
+use Ecotone\AnnotationFinder\AnnotationResolver\AttributeResolver;
+use Ecotone\AnnotationFinder\AnnotationResolver\CombinedResolver;
+use Ecotone\AnnotationFinder\AnnotationResolver\DoctrineAnnotationResolver;
 use Ecotone\AnnotationFinder\TypeResolver;
 
 class InMemoryAnnotationFinder implements AnnotationFinder
@@ -38,22 +41,21 @@ class InMemoryAnnotationFinder implements AnnotationFinder
 
     public function registerClassWithAnnotations(string $className) : self
     {
-        $annotationReader = new AnnotationReader();
+        $annotationResolver = new CombinedResolver(new AttributeResolver(), new DoctrineAnnotationResolver());
 
         $reflectionClass = new \ReflectionClass($className);
         foreach (get_class_methods($className) as $method) {
             $methodOwnerClass = TypeResolver::getMethodOwnerClass($reflectionClass, $method)->getName();
-            $methodReflection = new \ReflectionMethod($methodOwnerClass, $method);
-            foreach ($annotationReader->getMethodAnnotations($methodReflection) as $methodAnnotation) {
+            foreach ($annotationResolver->getAnnotationsForMethod($methodOwnerClass, $method) as $methodAnnotation) {
                 $this->addAnnotationToClassMethod($className, $method, $methodAnnotation);
             }
         }
 
-        foreach ($annotationReader->getClassAnnotations($reflectionClass) as $classAnnotation) {
+        foreach ($annotationResolver->getAnnotationsForClass($className) as $classAnnotation) {
             $this->addAnnotationToClass($className, $classAnnotation);
         }
         foreach ($reflectionClass->getProperties() as $property) {
-            foreach ($annotationReader->getPropertyAnnotations($property) as $annotation) {
+            foreach ($annotationResolver->getAnnotationsForProperty($className, $property->getName()) as $annotation) {
                 if (!$this->hasRegisteredAnnotationForProperty($reflectionClass->getName(), $property->getName(), $annotation)) {
                     $this->addAnnotationToProperty($reflectionClass->getName(), $property->getName(), $annotation);
                 }
@@ -62,7 +64,7 @@ class InMemoryAnnotationFinder implements AnnotationFinder
         $parentClass = $reflectionClass;
         do {
             foreach ($parentClass->getProperties() as $property) {
-                foreach ($annotationReader->getPropertyAnnotations($property) as $annotation) {
+                foreach ($annotationResolver->getAnnotationsForProperty($parentClass->getName(), $property->getName()) as $annotation) {
                     if (!$this->hasRegisteredAnnotationForProperty($reflectionClass->getName(), $property->getName(), $annotation)) {
                         $this->addAnnotationToProperty($reflectionClass->getName(), $property->getName(), $annotation);
                     }
@@ -144,10 +146,7 @@ class InMemoryAnnotationFinder implements AnnotationFinder
         return $registrations;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function findAnnotatedClasses(string $annotationClassName): array
+    private function getAllClassesWithAnnotation(string $annotationClassName): array
     {
         $classes = [];
 
@@ -165,11 +164,19 @@ class InMemoryAnnotationFinder implements AnnotationFinder
     /**
      * @inheritDoc
      */
-    public function getAnnotationForClass(string $className, string $annotationClassName) : ?object
+    public function findAnnotatedClasses(string $annotationClassName): array
     {
-        return isset($this->annotationsForClass[self::CLASS_ANNOTATIONS][$className][$annotationClassName])
-            ? $this->annotationsForClass[self::CLASS_ANNOTATIONS][$className][$annotationClassName]
-            : null;
+        $classes = [];
+
+        foreach ($this->annotationsForClass[self::CLASS_ANNOTATIONS] as $className => $annotations) {
+            foreach ($annotations as $annotation) {
+                if (get_class($annotation) == $annotationClassName) {
+                    $classes[] = $className;
+                }
+            }
+        }
+
+        return $classes;
     }
 
     /**
