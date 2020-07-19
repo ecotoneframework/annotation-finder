@@ -9,6 +9,7 @@ use Ecotone\AnnotationFinder\AnnotationFinder;
 use Ecotone\AnnotationFinder\AnnotationResolver\AttributeResolver;
 use Ecotone\AnnotationFinder\AnnotationResolver\CombinedResolver;
 use Ecotone\AnnotationFinder\AnnotationResolver\DoctrineAnnotationResolver;
+use Ecotone\AnnotationFinder\AnnotationResolver\OnlyAvailableResolver;
 use Ecotone\AnnotationFinder\TypeResolver;
 
 class InMemoryAnnotationFinder implements AnnotationFinder
@@ -41,7 +42,7 @@ class InMemoryAnnotationFinder implements AnnotationFinder
 
     public function registerClassWithAnnotations(string $className) : self
     {
-        $annotationResolver = new CombinedResolver(new AttributeResolver(), new DoctrineAnnotationResolver());
+        $annotationResolver = new OnlyAvailableResolver();
 
         $reflectionClass = new \ReflectionClass($className);
         foreach (get_class_methods($className) as $method) {
