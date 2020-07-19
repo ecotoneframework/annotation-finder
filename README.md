@@ -1,16 +1,10 @@
-[![Build Status](https://travis-ci.org/ecotoneframework/ecotone.svg?branch=master)](https://travis-ci.org/ecotoneframework/ecotone)
-[![License](https://poser.pugx.org/ecotone/ecotone/license)](https://packagist.org/packages/ecotone/ecotone)
-[![Latest Stable Version](https://poser.pugx.org/ecotone/ecotone/v/stable)](https://packagist.org/packages/ecotone/ecotone)
-[![Coverage Status](https://coveralls.io/repos/github/ecotoneframework/ecotone/badge.svg?branch=master)](https://coveralls.io/github/ecotoneframework/ecotone?branch=master)
+[![Build Status](https://travis-ci.org/ecotoneframework/annotation-finder.svg?branch=master)](https://travis-ci.org/ecotoneframework/annotation-finder)
+[![License](https://poser.pugx.org/ecotone/annotation-finder/license)](https://packagist.org/packages/ecotone/annotation-finder)
+[![Latest Stable Version](https://poser.pugx.org/ecotone/annotation-finder/v/stable)](https://packagist.org/packages/ecotone/annotation-finder)
+[![Coverage Status](https://coveralls.io/repos/github/ecotoneframework/annotation-finder/badge.svg?branch=master)](https://coveralls.io/github/ecotoneframework/annotation-finder?branch=master)
 
 ## Annotation Resolver
 
-
-
-## Getting started
-
-The quickstart [page](https://docs.ecotone.tech/quick-start) of the 
-[reference guide](https://docs.ecotone.tech) provides a starting point for using Ecotone.
 
 ## Feature requests and issue reporting
 
