@@ -8,6 +8,13 @@ use Ecotone\AnnotationFinder\TypeResolver;
 
 class AttributeResolver implements AnnotationResolver
 {
+    public function __construct()
+    {
+        if (PHP_MAJOR_VERSION < 8) {
+            throw new \InvalidArgumentException("Can't use of PHP Native Attribute Resolver, as PHP version is lower than 8.");
+        }
+    }
+
     /**
      * @inheritDoc
      */

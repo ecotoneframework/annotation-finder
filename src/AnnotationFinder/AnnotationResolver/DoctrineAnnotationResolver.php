@@ -16,6 +16,10 @@ class DoctrineAnnotationResolver implements AnnotationResolver
     public function __construct()
     {
         $this->annotationReader = new AnnotationReader();
+
+        if (!class_exists(AnnotationReader::class)) {
+            throw new \InvalidArgumentException("Can not use of Doctrine Annotation Resolver, as there is no " . AnnotationReader::class . " class available.");
+        }
     }
 
     /**
