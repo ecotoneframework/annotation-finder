@@ -4,12 +4,15 @@
 namespace Test\Ecotone\AnnotationFinder\Unit;
 
 use Ecotone\AnnotationFinder\AnnotatedDefinition;
+use Ecotone\AnnotationFinder\AnnotatedMethod;
 use Ecotone\AnnotationFinder\Annotation\Environment;
+use Ecotone\AnnotationFinder\AnnotationFinder;
 use Ecotone\AnnotationFinder\AnnotationResolver;
 use Ecotone\AnnotationFinder\ConfigurationException;
 use Ecotone\AnnotationFinder\FileSystem\AutoloadFileNamespaceParser;
 use Ecotone\AnnotationFinder\FileSystem\FileSystemAnnotationFinder;
 use Ecotone\AnnotationFinder\FileSystem\InMemoryAutoloadNamespaceParser;
+use PHPUnit\Framework\TestCase;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\ApplicationContext;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\EndpointAnnotation;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\Extension;
@@ -21,9 +24,12 @@ use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Environment\Application
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Environment\ApplicationContextWithMethodMultipleEnvironmentsExample;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\MessageEndpoint\Gateway\FileSystem\GatewayWithReplyChannelExample;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\MessageEndpoint\Splitter\SplitterExample;
+use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\MessageEndpoint\SplitterOnMethod\SplitterOnMethodExample;
 
-class DoctrineAnnotationFinderTest extends AnnotationFinderTest
+class FileSystemDoctrineAnnotationFinderTest extends TestCase
 {
+    const ROOT_DIR = __DIR__ . '/../../../';
+
     public function test_retrieving_annotation_registration_for_application_context()
     {
         $gatewayAnnotation = new MessageGateway();
@@ -40,7 +46,7 @@ class DoctrineAnnotationFinderTest extends AnnotationFinderTest
                 )
             ],
             $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix() . "\\MessageEndpoint\\Gateway\\FileSystem", "prod")
-                ->findAnnotatedMethods(MessageEndpoint::class, MessageGateway::class)
+                ->findCombined(MessageEndpoint::class, MessageGateway::class)
         );
     }
 
@@ -52,7 +58,7 @@ class DoctrineAnnotationFinderTest extends AnnotationFinderTest
 
     public function test_retrieving_all_classes_with_annotation()
     {
-        $classes = $this->getAnnotationRegistrationService()->findAnnotatedClasses(ApplicationContext::class);
+        $classes = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix(), "prod")->findAnnotatedClasses(ApplicationContext::class);
 
         $this->assertNotEmpty($classes, "File system class locator didn't find application context");
     }
@@ -98,28 +104,63 @@ class DoctrineAnnotationFinderTest extends AnnotationFinderTest
         $fileSystemAnnotationRegistrationService = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix() . "\\Environment", "dev");
         $this->assertEquals(
             [
-                $this->createAnnotationRegistration($applicationContext, $methodAnnotation, ApplicationContextWithMethodEnvironmentExample::class, "configSingleEnvironment", [$applicationContext, $prodDevEnvironment], [$methodAnnotation, $devEnvironment]),
-                $this->createAnnotationRegistration($applicationContext, $methodAnnotation, ApplicationContextWithMethodMultipleEnvironmentsExample::class, "configMultipleEnvironments", [$applicationContext], [$methodAnnotation, $allEnvironment])
+                AnnotatedDefinition::create(
+                    $applicationContext,
+                    $methodAnnotation,
+                    ApplicationContextWithMethodEnvironmentExample::class,
+                    "configSingleEnvironment",
+                    [$applicationContext, $prodDevEnvironment],
+                    [$methodAnnotation, $devEnvironment]
+                ),
+                AnnotatedDefinition::create(
+                    $applicationContext,
+                    $methodAnnotation,
+                    ApplicationContextWithMethodMultipleEnvironmentsExample::class,
+                    "configMultipleEnvironments",
+                    [$applicationContext],
+                    [$methodAnnotation, $allEnvironment]
+                )
             ],
-            $fileSystemAnnotationRegistrationService->findAnnotatedMethods(ApplicationContext::class, Extension::class)
+            $fileSystemAnnotationRegistrationService->findCombined(ApplicationContext::class, Extension::class)
         );
 
 
         $fileSystemAnnotationRegistrationService = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix() . "\\Environment", "test");
         $this->assertEquals(
             [
-                $this->createAnnotationRegistration($applicationContext, $methodAnnotation, ApplicationContextWithMethodMultipleEnvironmentsExample::class, "configMultipleEnvironments", [$applicationContext], [$methodAnnotation, $allEnvironment])
+                AnnotatedDefinition::create(
+                    $applicationContext,
+                    $methodAnnotation,
+                    ApplicationContextWithMethodMultipleEnvironmentsExample::class,
+                    "configMultipleEnvironments",
+                    [$applicationContext],
+                    [$methodAnnotation, $allEnvironment]
+                )
             ],
-            $fileSystemAnnotationRegistrationService->findAnnotatedMethods(ApplicationContext::class, Extension::class)
+            $fileSystemAnnotationRegistrationService->findCombined(ApplicationContext::class, Extension::class)
         );
 
         $fileSystemAnnotationRegistrationService = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix() . "\\Environment", "prod");
         $this->assertEquals(
             [
-                $this->createAnnotationRegistration($applicationContext, $methodAnnotation, ApplicationContextWithClassEnvironment::class, "someAction", [$applicationContext, $prodEnvironment], [$methodAnnotation]),
-                $this->createAnnotationRegistration($applicationContext, $methodAnnotation, ApplicationContextWithMethodMultipleEnvironmentsExample::class, "configMultipleEnvironments", [$applicationContext], [$methodAnnotation, $allEnvironment])
+                AnnotatedDefinition::create(
+                    $applicationContext,
+                    $methodAnnotation,
+                    ApplicationContextWithClassEnvironment::class,
+                    "someAction",
+                    [$applicationContext, $prodEnvironment],
+                    [$methodAnnotation]
+                ),
+                AnnotatedDefinition::create(
+                    $applicationContext,
+                    $methodAnnotation,
+                    ApplicationContextWithMethodMultipleEnvironmentsExample::class,
+                    "configMultipleEnvironments",
+                    [$applicationContext],
+                    [$methodAnnotation, $allEnvironment]
+                )
             ],
-            $fileSystemAnnotationRegistrationService->findAnnotatedMethods(ApplicationContext::class, Extension::class)
+            $fileSystemAnnotationRegistrationService->findCombined(ApplicationContext::class, Extension::class)
         );
     }
 
@@ -141,11 +182,29 @@ class DoctrineAnnotationFinderTest extends AnnotationFinderTest
                     [$annotation]
                 )
             ],
-            $fileSystemAnnotationRegistrationService->findAnnotatedMethods(MessageEndpoint::class, EndpointAnnotation::class)
+            $fileSystemAnnotationRegistrationService->findCombined(MessageEndpoint::class, EndpointAnnotation::class)
         );
     }
 
+    public function test_retrieving_by_only_method_annotation()
+    {
+        $annotation = new Splitter();
 
+        $fileSystemAnnotationRegistrationService = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix() . "\\MessageEndpoint\\SplitterOnMethod", "prod");
+
+        $this->assertEquals(
+            [
+                AnnotatedMethod::create(
+                    $annotation,
+                    SplitterOnMethodExample::class,
+                    "split",
+                    [],
+                    [$annotation]
+                )
+            ],
+            $fileSystemAnnotationRegistrationService->findAnnotatedMethods(Splitter::class)
+        );
+    }
 
     public function test_throwing_exception_if_class_is_registed_under_incorrect_namespace()
     {
@@ -228,5 +287,21 @@ class DoctrineAnnotationFinderTest extends AnnotationFinderTest
     public function getAnnotationNamespacePrefix(): string
     {
         return "Test\\Ecotone\\AnnotationFinder\\Fixture\\Usage\\Doctrine";
+    }
+
+    private function createAnnotationRegistrationService(string $namespace, string $environmentName): AnnotationFinder
+    {
+        $fileSystemAnnotationRegistrationService = new FileSystemAnnotationFinder(
+            $this->getAnnotationResolver(),
+            new AutoloadFileNamespaceParser(),
+            self::ROOT_DIR,
+            [
+                $namespace
+            ],
+            $environmentName,
+            ""
+        );
+
+        return $fileSystemAnnotationRegistrationService;
     }
 }

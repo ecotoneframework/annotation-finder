@@ -5,6 +5,7 @@ namespace Ecotone\AnnotationFinder\InMemory;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Ecotone\AnnotationFinder\AnnotatedDefinition;
+use Ecotone\AnnotationFinder\AnnotatedMethod;
 use Ecotone\AnnotationFinder\AnnotationFinder;
 use Ecotone\AnnotationFinder\AnnotationResolver\AttributeResolver;
 use Ecotone\AnnotationFinder\AnnotationResolver\CombinedResolver;
@@ -47,11 +48,13 @@ class InMemoryAnnotationFinder implements AnnotationFinder
         $reflectionClass = new \ReflectionClass($className);
         foreach (get_class_methods($className) as $method) {
             $methodOwnerClass = TypeResolver::getMethodOwnerClass($reflectionClass, $method)->getName();
+            $this->annotationsForClass[$className][$method] = [];
             foreach ($annotationResolver->getAnnotationsForMethod($methodOwnerClass, $method) as $methodAnnotation) {
                 $this->addAnnotationToClassMethod($className, $method, $methodAnnotation);
             }
         }
 
+        $this->annotationsForClass[self::CLASS_ANNOTATIONS][$className] = [];
         foreach ($annotationResolver->getAnnotationsForClass($className) as $classAnnotation) {
             $this->addAnnotationToClass($className, $classAnnotation);
         }
@@ -118,7 +121,7 @@ class InMemoryAnnotationFinder implements AnnotationFinder
     /**
      * @inheritDoc
      */
-    public function findAnnotatedMethods(string $classAnnotationName, string $methodAnnotationClassName): array
+    public function findCombined(string $classAnnotationName, string $methodAnnotationClassName): array
     {
         $classes = $this->getAllClassesWithAnnotation($classAnnotationName);
 
@@ -136,8 +139,8 @@ class InMemoryAnnotationFinder implements AnnotationFinder
                             $methodAnnotation,
                             $class,
                             $methodName,
-                            $this->getAnnotationsForClass($class),
-                            $methodAnnotations
+                            array_values($this->getAnnotationsForClass($class)),
+                            array_values($methodAnnotations)
                         );
                     }
                 }
@@ -149,6 +152,10 @@ class InMemoryAnnotationFinder implements AnnotationFinder
 
     private function getAllClassesWithAnnotation(string $annotationClassName): array
     {
+        if ($annotationClassName === "*") {
+            return array_keys($this->annotationsForClass[self::CLASS_ANNOTATIONS]);
+        }
+
         $classes = [];
 
         foreach ($this->annotationsForClass[self::CLASS_ANNOTATIONS] as $className => $annotations) {
@@ -178,6 +185,37 @@ class InMemoryAnnotationFinder implements AnnotationFinder
         }
 
         return $classes;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAnnotatedMethods(string $methodAnnotationClassName): array
+    {
+        $classes = $this->getAllClassesWithAnnotation("*");
+
+        $registrations = [];
+        foreach ($classes as $class) {
+            if (!isset($this->annotationsForClass[$class])) {
+                continue;
+            }
+
+            foreach ($this->annotationsForClass[$class] as $methodName => $methodAnnotations) {
+                foreach ($methodAnnotations as $methodAnnotation) {
+                    if (get_class($methodAnnotation) == $methodAnnotationClassName  || $methodAnnotation instanceof $methodAnnotationClassName) {
+                        $registrations[] = AnnotatedMethod::create(
+                            $methodAnnotation,
+                            $class,
+                            $methodName,
+                            array_values($this->getAnnotationsForClass($class)),
+                            array_values($methodAnnotations)
+                        );
+                    }
+                }
+            }
+        }
+
+        return $registrations;
     }
 
     /**

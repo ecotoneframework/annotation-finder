@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Ecotone\AnnotationFinder\FileSystem;
 
 use Ecotone\AnnotationFinder\AnnotatedDefinition;
+use Ecotone\AnnotationFinder\AnnotatedMethod;
 use Ecotone\AnnotationFinder\Annotation\Environment;
 use Ecotone\AnnotationFinder\AnnotationFinder;
 use Ecotone\AnnotationFinder\AnnotationResolver;
@@ -134,7 +135,39 @@ class FileSystemAnnotationFinder implements AnnotationFinder
     /**
      * @inheritDoc
      */
-    public function findAnnotatedMethods(string $classAnnotationName, string $methodAnnotationClassName): array
+    public function findAnnotatedMethods(string $methodAnnotationClassName): array
+    {
+        $registrations = [];
+        foreach ($this->findAnnotatedClasses("*") as $className) {
+            foreach (get_class_methods($className) as $method) {
+                if ($this->isMethodBannedFromCurrentEnvironment($className, $method)) {
+                    continue;
+                }
+
+                $methodAnnotations = $this->getCachedMethodAnnotations($className, $method);
+                foreach ($methodAnnotations as $methodAnnotation) {
+                    if (get_class($methodAnnotation) === $methodAnnotationClassName || $methodAnnotation instanceof $methodAnnotationClassName) {
+                        $annotationRegistration = AnnotatedMethod::create(
+                            $methodAnnotation,
+                            $className,
+                            $method,
+                            $this->getCachedAnnotationsForClass($className),
+                            $methodAnnotations
+                        );
+
+                        $registrations[] = $annotationRegistration;
+                    }
+                }
+            }
+        }
+
+        return $registrations;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findCombined(string $classAnnotationName, string $methodAnnotationClassName): array
     {
         $registrations = [];
         foreach ($this->findAnnotatedClasses($classAnnotationName) as $className) {
