@@ -35,7 +35,7 @@ class InMemoryAttributeAnnotationFinderTest extends TestCase
         return new AnnotationResolver\AttributeResolver();
     }
 
-    public function __test_retrieving_annotation_registration_for_application_context()
+    public function test_retrieving_annotation_registration_for_application_context()
     {
         if (PHP_MAJOR_VERSION < 8) {
             return;
@@ -59,7 +59,7 @@ class InMemoryAttributeAnnotationFinderTest extends TestCase
         );
     }
 
-    public function __test_retrieving_method_annotations()
+    public function test_retrieving_method_annotations()
     {
         if (PHP_MAJOR_VERSION < 8) {
             return;
@@ -76,7 +76,7 @@ class InMemoryAttributeAnnotationFinderTest extends TestCase
         );
     }
 
-    public function __test_retrieving_class_annotations()
+    public function test_retrieving_class_annotations()
     {
         if (PHP_MAJOR_VERSION < 8) {
             return;
@@ -91,7 +91,7 @@ class InMemoryAttributeAnnotationFinderTest extends TestCase
         );
     }
 
-    public function __test_finding_annotated_classes()
+    public function test_finding_annotated_classes()
     {
         if (PHP_MAJOR_VERSION < 8) {
             return;
