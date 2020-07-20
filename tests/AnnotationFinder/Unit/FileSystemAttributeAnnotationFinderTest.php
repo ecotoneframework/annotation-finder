@@ -217,6 +217,10 @@ class FileSystemAttributeAnnotationFinderTest extends TestCase
 
     public function test_retrieving_by_only_method_annotation()
     {
+        if (PHP_MAJOR_VERSION < 8) {
+            return;
+        }
+
         $annotation = new Splitter();
 
         $fileSystemAnnotationRegistrationService = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix() . "\\MessageEndpoint\\SplitterOnMethod", "prod");
