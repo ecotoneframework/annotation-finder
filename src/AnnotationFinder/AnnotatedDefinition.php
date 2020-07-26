@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Ecotone\AnnotationFinder;
 
-class AnnotatedDefinition
+class AnnotatedDefinition implements AnnotatedFinding
 {
     private string $className;
     private string $methodName;

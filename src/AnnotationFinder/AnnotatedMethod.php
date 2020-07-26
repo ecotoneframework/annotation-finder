@@ -2,7 +2,7 @@
 
 namespace Ecotone\AnnotationFinder;
 
-class AnnotatedMethod
+class AnnotatedMethod implements AnnotatedFinding
 {
     private string $className;
     private string $methodName;
