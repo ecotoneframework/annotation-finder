@@ -65,6 +65,54 @@ class AnnotatedDefinition implements AnnotatedFinding
         return $this->methodAnnotations;
     }
 
+    /**
+     * @return object[]
+     */
+    public function getClassAnnotations() : array
+    {
+        return $this->classAnnotations;
+    }
+
+    /**
+     * @return object[]
+     * @throws \InvalidArgumentException if not found any
+     */
+    public function getClassAnnotationsWithType(string $type) : array
+    {
+        $annotations = [];
+        foreach ($this->classAnnotations as $classAnnotation) {
+            if (get_class($classAnnotation) === $type) {
+                $annotations[] = $classAnnotation;
+            }
+        }
+
+        if (empty($annotations)) {
+            throw new \InvalidArgumentException("Trying to retrieve class annotation {$type}, but there is no any for {$this}");
+        }
+
+        return $annotations;
+    }
+
+    /**
+     * @return object[]
+     * @throws \InvalidArgumentException if not found any
+     */
+    public function getMethodAnnotationsWithType(string $type) : array
+    {
+        $annotations = [];
+        foreach ($this->methodAnnotations as $methodAnnotation) {
+            if (get_class($methodAnnotation) === $type) {
+                $annotations[] = $type;
+            }
+        }
+
+        if (empty($annotations)) {
+            throw new \InvalidArgumentException("Trying to retrieve class annotation {$type}, but there is no any for {$this}");
+        }
+
+        return $annotations;
+    }
+
     public function hasMethodAnnotation(string $type) : bool
     {
         foreach ($this->methodAnnotations as $methodAnnotation) {

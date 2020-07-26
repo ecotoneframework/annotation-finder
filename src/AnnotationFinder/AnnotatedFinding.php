@@ -13,7 +13,22 @@ interface AnnotatedFinding
     /**
      * @return object[]
      */
+    public function getClassAnnotations() : array;
+
+    /**
+     * @return object[]
+     */
     public function getMethodAnnotations(): array;
+
+    /**
+     * @return object[]
+     */
+    public function getMethodAnnotationsWithType(string $type) : array;
+
+    /**
+     * @return object[]
+     */
+    public function getClassAnnotationsWithType(string $type) : array;
 
     public function hasMethodAnnotation(string $type) : bool;
 
