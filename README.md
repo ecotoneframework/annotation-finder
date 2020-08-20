@@ -5,7 +5,7 @@
 
 ![Peek recording itself](https://raw.githubusercontent.com/ecotoneframework/annotation-finder/master/usage_example.gif)
 
-## Annotation Resolver
+## Annotation Finder
 
 Provides support for finding classes and methods annotated using Doctrine Annotations, PHP8 Attributes or both.
 
