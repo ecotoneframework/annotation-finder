@@ -2,7 +2,7 @@
 
 namespace Example\Attribute\Annotation;
 
-<<\Attribute>>
+#[\Attribute]
 class Logger
 {
 

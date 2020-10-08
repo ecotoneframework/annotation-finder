@@ -6,37 +6,37 @@ namespace Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\ApplicationConte
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\ApplicationContext;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\Extension;
 
-<<ApplicationContext>>
+#[ApplicationContext]
 class ApplicationContextExample
 {
     const HTTP_INPUT_CHANNEL = "httpEntry";
     const HTTP_OUTPUT_CHANNEL = "httpOutput";
 
-    <<Extension>>
+    #[Extension]
     public function gateway()
     {
         return new \stdClass();
     }
 
-    <<Extension>>
+    #[Extension]
     public function httpEntryChannel()
     {
         return new \stdClass();
     }
 
-    <<Extension>>
+    #[Extension]
     public function enricherHttpEntry()
     {
         return new \stdClass();
     }
 
-    <<Extension>>
+    #[Extension]
     public function withChannelInterceptors()
     {
         return new \stdClass();
     }
 
-    <<Extension>>
+    #[Extension]
     public function withStdClassConverterByExtension()
     {
         return new \stdClass();

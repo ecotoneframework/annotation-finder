@@ -4,7 +4,7 @@ namespace Example\Attribute\Order;
 
 use Example\Attribute\Annotation\Service;
 
-<<Service>>
+#[Service]
 class OrderService
 {
 }

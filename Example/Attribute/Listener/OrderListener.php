@@ -6,10 +6,10 @@ namespace Example\Attribute\Listener;
 use Example\Attribute\Annotation\Listener;
 use Example\Attribute\Annotation\Service;
 
-<<Service>>
+#[Service]
 class OrderListener
 {
-    <<Listener>>
+    #[Listener]
     public function doSomething() : void
     {
 

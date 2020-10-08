@@ -6,14 +6,14 @@ namespace Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\ApplicationConte
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\ApplicationContext;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\Extension;
 
-<<ApplicationContext>>
+#[ApplicationContext]
 class ApplicationContextWithConstructorParameters
 {
     public function __construct(\stdClass $some)
     {
     }
 
-    <<Extension>>
+    #[Extension]
     public function someExtension()
     {
         return new \stdClass();

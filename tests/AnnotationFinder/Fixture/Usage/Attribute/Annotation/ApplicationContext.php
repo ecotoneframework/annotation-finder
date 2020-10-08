@@ -2,7 +2,7 @@
 
 namespace Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation;
 
-<<\Attribute>>
+#[\Attribute]
 class ApplicationContext
 {
 

@@ -7,11 +7,11 @@ use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\Application
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\Extension;
 use Ecotone\AnnotationFinder\Annotation\Environment;
 
-<<ApplicationContext>>
+#[ApplicationContext]
 class ApplicationContextWithMethodMultipleEnvironmentsExample
 {
-    <<Extension>>
-    <<Environment(["dev", "prod", "test"])>>
+    #[Extension]
+    #[Environment(["dev", "prod", "test"])]
     public function configMultipleEnvironments() : array
     {
         return [];

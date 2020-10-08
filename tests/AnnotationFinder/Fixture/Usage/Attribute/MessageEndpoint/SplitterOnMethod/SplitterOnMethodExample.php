@@ -7,7 +7,7 @@ use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\Splitter;
 
 class SplitterOnMethodExample
 {
-    <<Splitter>>
+    #[Splitter]
     public function split(string $payload) : array
     {
         return [];

@@ -7,12 +7,12 @@ use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\Application
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\Extension;
 use Ecotone\AnnotationFinder\Annotation\Environment;
 
-<<ApplicationContext>>
-<<Environment(["prod", "dev"])>>
+#[ApplicationContext]
+#[Environment(["prod", "dev"])]
 class ApplicationContextWithMethodEnvironmentExample
 {
-    <<Extension>>
-    <<Environment(["dev"])>>
+    #[Extension]
+    #[Environment(["dev"])]
     public function configSingleEnvironment() : array
     {
         return [];

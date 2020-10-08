@@ -1,18 +1,30 @@
 <?php
 
-
 namespace Ecotone\AnnotationFinder\Annotation;
 
-if (PHP_MAJOR_VERSION >= 8) {
-    class_alias(\Annotation\AttributeEnvironment::class, "Ecotone\AnnotationFinder\Annotation\Environment");
-}else {
-    class_alias(\Annotation\DoctrineEnvironment::class, "Ecotone\AnnotationFinder\Annotation\Environment");
-}
+use Doctrine\Common\Annotations\Annotation\Target;
 
-//class Environment
-//{
-//    /**
-//     * @var string[]
-//     */
-//    public $names = [];
-//}
+#[\Attribute(
+    \Attribute::TARGET_CLASS |
+    \Attribute::TARGET_METHOD
+)]
+/**
+ * @Annotation
+ * @Target({"CLASS", "METHOD"})
+ */
+class Environment
+{
+    /**
+     * @var string[]
+     */
+    public array $names = [];
+
+    public function __construct(array $environments = [])
+    {
+        if (isset($environments['value'])) {
+            $environments = $environments['value'];
+        }
+
+        $this->names = $environments;
+    }
+}

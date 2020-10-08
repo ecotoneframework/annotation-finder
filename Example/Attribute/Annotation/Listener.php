@@ -3,7 +3,7 @@
 
 namespace Example\Attribute\Annotation;
 
-<<\Attribute>>
+#[\Attribute]
 class Listener
 {
 

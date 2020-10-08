@@ -5,11 +5,10 @@ namespace Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\MessageEndpoint\
 
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\MessageEndpoint;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\MessageGateway;
-use Annotation\AttributeEnvironment;
 
-<<MessageEndpoint()>>
+#[MessageEndpoint]
 interface GatewayWithReplyChannelExample
 {
-    <<MessageGateway()>>
+    #[MessageGateway]
     public function buy(string $orderId): bool;
 }
