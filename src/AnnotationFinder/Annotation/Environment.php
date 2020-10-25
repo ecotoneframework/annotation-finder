@@ -4,10 +4,7 @@ namespace Ecotone\AnnotationFinder\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
 
-#[\Attribute(
-    \Attribute::TARGET_CLASS |
-    \Attribute::TARGET_METHOD
-)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
 /**
  * @Annotation
  * @Target({"CLASS", "METHOD"})

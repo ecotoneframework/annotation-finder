@@ -13,7 +13,7 @@ use Ecotone\AnnotationFinder\FileSystem\AutoloadFileNamespaceParser;
 use Ecotone\AnnotationFinder\FileSystem\FileSystemAnnotationFinder;
 use Ecotone\AnnotationFinder\FileSystem\InMemoryAutoloadNamespaceParser;
 use PHPUnit\Framework\TestCase;
-use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\ApplicationContext;
+use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\System;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\EndpointAnnotation;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\Extension;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\MessageEndpoint;
@@ -58,7 +58,7 @@ class FileSystemDoctrineAnnotationFinderTest extends TestCase
 
     public function test_retrieving_all_classes_with_annotation()
     {
-        $classes = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix(), "prod")->findAnnotatedClasses(ApplicationContext::class);
+        $classes = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix(), "prod")->findAnnotatedClasses(System::class);
 
         $this->assertNotEmpty($classes, "File system class locator didn't find application context");
     }
@@ -99,29 +99,29 @@ class FileSystemDoctrineAnnotationFinderTest extends TestCase
         $allEnvironment                          = new Environment();
         $allEnvironment->names                   = ["dev", "prod", "test"];
         $methodAnnotation                        = new Extension();
-        $applicationContext                      = new ApplicationContext();
+        $System                      = new System();
 
         $fileSystemAnnotationRegistrationService = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix() . "\\Environment", "dev");
         $this->assertEquals(
             [
                 AnnotatedDefinition::create(
-                    $applicationContext,
+                    $System,
                     $methodAnnotation,
                     ApplicationContextWithMethodEnvironmentExample::class,
                     "configSingleEnvironment",
-                    [$applicationContext, $prodDevEnvironment],
+                    [$System, $prodDevEnvironment],
                     [$methodAnnotation, $devEnvironment]
                 ),
                 AnnotatedDefinition::create(
-                    $applicationContext,
+                    $System,
                     $methodAnnotation,
                     ApplicationContextWithMethodMultipleEnvironmentsExample::class,
                     "configMultipleEnvironments",
-                    [$applicationContext],
+                    [$System],
                     [$methodAnnotation, $allEnvironment]
                 )
             ],
-            $fileSystemAnnotationRegistrationService->findCombined(ApplicationContext::class, Extension::class)
+            $fileSystemAnnotationRegistrationService->findCombined(System::class, Extension::class)
         );
 
 
@@ -129,38 +129,38 @@ class FileSystemDoctrineAnnotationFinderTest extends TestCase
         $this->assertEquals(
             [
                 AnnotatedDefinition::create(
-                    $applicationContext,
+                    $System,
                     $methodAnnotation,
                     ApplicationContextWithMethodMultipleEnvironmentsExample::class,
                     "configMultipleEnvironments",
-                    [$applicationContext],
+                    [$System],
                     [$methodAnnotation, $allEnvironment]
                 )
             ],
-            $fileSystemAnnotationRegistrationService->findCombined(ApplicationContext::class, Extension::class)
+            $fileSystemAnnotationRegistrationService->findCombined(System::class, Extension::class)
         );
 
         $fileSystemAnnotationRegistrationService = $this->createAnnotationRegistrationService($this->getAnnotationNamespacePrefix() . "\\Environment", "prod");
         $this->assertEquals(
             [
                 AnnotatedDefinition::create(
-                    $applicationContext,
+                    $System,
                     $methodAnnotation,
                     ApplicationContextWithClassEnvironment::class,
                     "someAction",
-                    [$applicationContext, $prodEnvironment],
+                    [$System, $prodEnvironment],
                     [$methodAnnotation]
                 ),
                 AnnotatedDefinition::create(
-                    $applicationContext,
+                    $System,
                     $methodAnnotation,
                     ApplicationContextWithMethodMultipleEnvironmentsExample::class,
                     "configMultipleEnvironments",
-                    [$applicationContext],
+                    [$System],
                     [$methodAnnotation, $allEnvironment]
                 )
             ],
-            $fileSystemAnnotationRegistrationService->findCombined(ApplicationContext::class, Extension::class)
+            $fileSystemAnnotationRegistrationService->findCombined(System::class, Extension::class)
         );
     }
 

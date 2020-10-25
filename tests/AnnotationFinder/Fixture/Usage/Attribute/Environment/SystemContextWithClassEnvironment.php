@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Environment;
 
 use Ecotone\AnnotationFinder\Annotation\Environment;
-use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\ApplicationContext;
+use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\System;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Attribute\Annotation\Extension;
 
-#[ApplicationContext]
+#[System]
 #[Environment(["prod"])]
-class ApplicationContextWithClassEnvironment
+class SystemContextWithClassEnvironment
 {
     #[Extension]
     public function someAction() : void

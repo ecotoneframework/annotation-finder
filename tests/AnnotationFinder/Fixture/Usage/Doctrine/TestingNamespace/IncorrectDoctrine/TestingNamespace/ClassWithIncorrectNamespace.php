@@ -6,14 +6,9 @@ namespace IncorrectDoctrine\TestingNamespace\Wrong;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\ApplicationContext;
 use Test\Ecotone\AnnotationFinder\Fixture\Usage\Doctrine\Annotation\Extension;
 
-/**
- * @ApplicationContext()
- */
 class ClassWithIncorrectNamespaceAndClassName
 {
-    /**
-     * @Extension()
-     */
+    #[\Ecotone\Messaging\Annotation\ApplicationContext]
     public function someExtension() : array
     {
         return [];
