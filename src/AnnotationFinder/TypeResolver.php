@@ -33,7 +33,7 @@ class TypeResolver
 
         return $analyzedClass;
     }
-    
+
     private static function getMethodDeclaringClass(\ReflectionClass $analyzedClass, string $methodName): \ReflectionClass
     {
         return $analyzedClass->getMethod($methodName)->getDeclaringClass();
