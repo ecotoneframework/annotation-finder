@@ -81,7 +81,7 @@ class AnnotatedDefinition implements AnnotatedFinding
     {
         $annotations = [];
         foreach ($this->classAnnotations as $classAnnotation) {
-            if (get_class($classAnnotation) === $type) {
+            if ($classAnnotation instanceof $type) {
                 $annotations[] = $classAnnotation;
             }
         }
@@ -101,8 +101,8 @@ class AnnotatedDefinition implements AnnotatedFinding
     {
         $annotations = [];
         foreach ($this->methodAnnotations as $methodAnnotation) {
-            if (get_class($methodAnnotation) === $type) {
-                $annotations[] = $type;
+            if ($methodAnnotation instanceof $type) {
+                $annotations[] = $methodAnnotation;
             }
         }
 
@@ -116,7 +116,7 @@ class AnnotatedDefinition implements AnnotatedFinding
     public function hasMethodAnnotation(string $type) : bool
     {
         foreach ($this->methodAnnotations as $methodAnnotation) {
-            if (get_class($methodAnnotation) === $type) {
+            if ($methodAnnotation instanceof $type) {
                 return true;
             }
         }
@@ -127,7 +127,7 @@ class AnnotatedDefinition implements AnnotatedFinding
     public function hasClassAnnotation(string $type) : bool
     {
         foreach ($this->classAnnotations as $classAnnotation) {
-            if (get_class($classAnnotation) === $type) {
+            if ($classAnnotation instanceof $type) {
                 return true;
             }
         }
